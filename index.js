@@ -1,12 +1,8 @@
 const { hideHudComponents } = require("timerbars/util");
 const { gfxAlignWidth, gfxAlignHeight, initialY, initialBusySpinnerY, timerBarMargin, timerBarThinMargin } = require("timerbars/coordsAndSizes");
+const { setScriptGfxAlign, setScriptGfxAlignParams, resetScriptGfxAlign } = mp.game.graphics;
+const { busyspinnerIsOn } = mp.game.hud;
 const TimerBarBase = require("timerbars/classes/TimerBarBase");
-const invoke = mp.game.invoke;
-
-const BUSYSPINNER_IS_ON = "0xD422FCC5F239A915";
-const SET_SCRIPT_GFX_ALIGN = "0xB8A850F20A067EB6";
-const SET_SCRIPT_GFX_ALIGN_PARAMS = "0xF5A2C681787E579D";
-const RESET_SCRIPT_GFX_ALIGN = "0xE3A3DB414A373DAB";
 
 let timerBarPool = [];
 
@@ -24,17 +20,17 @@ mp.events.add("render", () => {
     hideHudComponents();
 
     // Apply drawing config
-    invoke(SET_SCRIPT_GFX_ALIGN, 82, 66);
-    invoke(SET_SCRIPT_GFX_ALIGN_PARAMS, 0.0, 0.0, gfxAlignWidth, gfxAlignHeight);
+    setScriptGfxAlign(82, 66);
+    setScriptGfxAlignParams(0.0, 0.0, gfxAlignWidth, gfxAlignHeight);
 
     // Draw
-    for (let i = 0, drawY = (invoke(BUSYSPINNER_IS_ON) ? initialBusySpinnerY : initialY); i < max; i++) {
+    for (let i = 0, drawY = (busyspinnerIsOn() ? initialBusySpinnerY : initialY); i < max; i++) {
         timerBarPool[i].draw(drawY);
         drawY -= timerBarPool[i]._thin ? timerBarThinMargin : timerBarMargin;
     }
 
     // Reset drawing config
-    invoke(RESET_SCRIPT_GFX_ALIGN);
+    resetScriptGfxAlign();
 });
 
 // API

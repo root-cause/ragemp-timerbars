@@ -1,4 +1,16 @@
-const { hideHudComponentThisFrame, getHudColour, setTextEntry, setTextFont, setTextScale, setTextColour, setTextJustification, setTextWrap, drawText } = mp.game.ui;
+const {
+    hideComponentThisFrame,
+    getColour,
+    beginTextCommandDisplayText,
+    setTextFont,
+    setTextScale,
+    setTextColour,
+    setTextJustification,
+    setTextWrap,
+    setTextDropShadow,
+    setTextOutline,
+    endTextCommandDisplayText
+} = mp.game.hud;
 
 const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const charactersLength = characters.length;
@@ -23,17 +35,17 @@ function clamp(value, min, max) {
 }
 
 function hideHudComponents() {
-    hideHudComponentThisFrame(6); // HUD_VEHICLE_NAME
-    hideHudComponentThisFrame(7); // HUD_AREA_NAME
-    hideHudComponentThisFrame(8); // HUD_VEHICLE_CLASS
-    hideHudComponentThisFrame(9); // HUD_STREET_NAME
+    hideComponentThisFrame(6); // HUD_VEHICLE_NAME
+    hideComponentThisFrame(7); // HUD_AREA_NAME
+    hideComponentThisFrame(8); // HUD_VEHICLE_CLASS
+    hideComponentThisFrame(9); // HUD_STREET_NAME
 }
 
 function getColorFromValue(value) {
     if (Array.isArray(value)) {
         return value;
     } else {
-        const result = getHudColour(value, 0, 0, 0, 0);
+        const result = getColour(value, 0, 0, 0, 0);
         return [result.r, result.g, result.b, result.a];
     }
 }
@@ -51,15 +63,15 @@ function drawTextLabel(label, position, options) {
     }
 
     if (shadow) {
-        mp.game.invoke("0x1CA3E9EAC9D93E5E"); // SET_TEXT_DROP_SHADOW
+        setTextDropShadow();
     }
 
     if (outline) {
-        mp.game.invoke("0x2513DFB0FB8400FE"); // SET_TEXT_OUTLINE
+        setTextOutline();
     }
 
-    setTextEntry(label);
-    drawText(position[0], position[1]);
+    beginTextCommandDisplayText(label);
+    endTextCommandDisplayText(position[0], position[1]);
 }
 
 exports = {
